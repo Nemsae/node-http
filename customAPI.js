@@ -6,8 +6,7 @@ const qs = require('querystring');
 // const moment = require('moment');
 const wd = require('word-definition');
 const routes = require('./routes')
-
-console.log('routes',routes);
+const sCheck = require('spellchecker')
 
 const server = http.createServer((req, res) => {
   // req === request obj received
@@ -28,7 +27,11 @@ const server = http.createServer((req, res) => {
 // For Gravatar_______________________________________________________________
   // let [ foo, path, email ] = url.split('/');
 
-// For Sentence Analyzer______________________________________________________
+// // For Sentence Analyzer______________________________________________________
+//   let [ foo, path, urlString] = url.split('/');
+//   let string = decodeURI(urlString);
+
+// For Spell Checker______________________________________________________
   let [ foo, path, urlString] = url.split('/');
   let string = decodeURI(urlString);
 
@@ -53,11 +56,25 @@ const server = http.createServer((req, res) => {
   switch(path) {
 //______________________________// switch for All//______________________________//
 
+// For SpellChecker________________________________________________________________
+    case 'spellcheck':
+      switch(method) {
+        case 'POST':
+          console.log('string: ',string);
+          let x = sCheck.isMisspelled(string);
+          if (x == true) {
+            let y = sCheck.getCorrectionsForMisspelling(string);
+            res.end(`${y}`);
+          }
+        res.end(`Spellcheck!`)
+        break;
+      }
+      break;
+
 // For UnProfane________________________________________________________________
     case 'unprofane':
       switch(method) {
         case 'POST':
-
 
         res.end(`Blah. F*** You m8.`)
         break;
